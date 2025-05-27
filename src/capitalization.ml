@@ -18,7 +18,7 @@ type t =
   | Lower_sentence_case
   | Upper_sentence_case
   | Alternating_sentence_case
-[@@deriving equal, enumerate, sexp_of]
+[@@deriving equal ~localize, enumerate, sexp_of]
 
 let to_string = function
   | Pascal_case -> "PascalCase"

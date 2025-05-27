@@ -3,4 +3,4 @@
  (public_name capitalization)
  (libraries base)
  (preprocess
-  (pps ppx_base)))
+  (pps ppx_base -require-template-extension)))
