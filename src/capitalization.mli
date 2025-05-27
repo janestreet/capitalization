@@ -21,7 +21,7 @@ type t =
   | Lower_sentence_case (* lower sentence case *)
   | Upper_sentence_case (* UPPER SENTENCE CASE *)
   | Alternating_sentence_case (* aLtErNaTiNg sEnTeNcE CaSe *)
-[@@deriving equal, enumerate, sexp_of]
+[@@deriving equal ~localize, enumerate, sexp_of]
 
 include Stringable.S with type t := t
 
