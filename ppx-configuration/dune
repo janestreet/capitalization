@@ -1,0 +1,6 @@
+(library
+ (name capitalization_ppx_configuration)
+ (public_name capitalization.ppx_configuration)
+ (libraries base capitalization ppxlib)
+ (preprocess
+  (pps ppx_base -require-template-extension)))
