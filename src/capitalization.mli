@@ -21,7 +21,7 @@ type t =
   | Lower_sentence_case (* lower sentence case *)
   | Upper_sentence_case (* UPPER SENTENCE CASE *)
   | Alternating_sentence_case (* aLtErNaTiNg sEnTeNcE CaSe *)
-[@@deriving equal ~localize, enumerate, sexp_of]
+[@@deriving equal ~localize, enumerate, sexp_of, compare ~localize]
 
 include Stringable.S with type t := t
 
@@ -34,5 +34,25 @@ val apply_to_snake_case : t -> string -> string
 (** Capitalizes the input words according to the convention in [t]. *)
 val apply_to_words : t -> string list -> string
 
-(** Contains a list of all of the options, for showing in error messages *)
+(** Contains a list of all of the options, for showing in error messages. *)
 val can_be : string list Lazy.t
+
+(** Returns the separator character used by the capitalization style, if any. *)
+val separator : t -> char option
+
+module Single_word : sig
+  (** These capitalizations only specify the behavior when there's a single word *)
+
+  type t =
+    | Lowercase (* lowercase *)
+    | Uppercase (* UPPERCASE *)
+    | Capitalized (* Capitalized *)
+    | Alternating (* aLtErNaTiNg *)
+  [@@deriving equal ~localize, enumerate, sexp_of, compare ~localize]
+
+  include Stringable.S with type t := t
+
+  val apply_to_word : t -> string -> string
+end
+
+val first_word_behavior : t -> Single_word.t

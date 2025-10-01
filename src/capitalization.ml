@@ -18,7 +18,7 @@ type t =
   | Lower_sentence_case
   | Upper_sentence_case
   | Alternating_sentence_case
-[@@deriving equal ~localize, enumerate, sexp_of]
+[@@deriving equal ~localize, enumerate, sexp_of, compare ~localize]
 
 let to_string = function
   | Pascal_case -> "PascalCase"
@@ -63,7 +63,7 @@ let of_string = function
   | s ->
     raise_s
       (List
-         [ Atom "Capitalization.of_string: invalid indentation string"
+         [ Atom "Capitalization.of_string: invalid capitalization string"
          ; List [ Atom "s"; Atom s ]
          ; List [ Atom "can_be"; [%sexp_of: string list] (Lazy.force can_be) ]
          ])
@@ -228,4 +228,57 @@ let apply_to_words' words ~case_for_position ~separator =
 
 let apply_to_words t words =
   apply_to_words' words ~case_for_position:(case_for_position t) ~separator:(separator t)
+;;
+
+module Single_word = struct
+  type t =
+    | Lowercase (* lowercase *)
+    | Uppercase (* UPPERCASE *)
+    | Capitalized (* Capitalized *)
+    | Alternating (* aLtErNaTiNg *)
+  [@@deriving equal ~localize, enumerate, sexp_of, compare ~localize]
+
+  let to_string = function
+    | Lowercase -> "lowercase"
+    | Uppercase -> "UPPERCASE"
+    | Capitalized -> "Capitalized"
+    | Alternating -> "aLtErNaTiNg"
+  ;;
+
+  let can_be = lazy (List.map all ~f:to_string)
+
+  let of_string = function
+    | "lowercase" -> Lowercase
+    | "UPPERCASE" -> Uppercase
+    | "Capitalized" -> Capitalized
+    | "aLtErNaTiNg" -> Alternating
+    | s ->
+      raise_s
+        (List
+           [ Atom "Capitalization.Single_word.of_string: invalid capitalization string"
+           ; List [ Atom "s"; Atom s ]
+           ; List [ Atom "can_be"; [%sexp_of: string list] (Lazy.force can_be) ]
+           ])
+  ;;
+
+  let apply_to_word t word =
+    let compatible_multi_word =
+      match t with
+      | Lowercase -> Snake_case
+      | Uppercase -> Screaming_snake_case
+      | Capitalized -> Capitalized_snake_case
+      | Alternating -> Alternating_snake_case
+    in
+    apply_to_words compatible_multi_word [ word ]
+  ;;
+end
+
+let first_word_behavior t : Single_word.t =
+  match what_to_capitalize t with
+  | Everything -> Uppercase
+  | Nothing -> Lowercase
+  | First_word_only -> Capitalized
+  | All_words_but_first -> Lowercase
+  | Every_word -> Capitalized
+  | Alternating_letters -> Alternating
 ;;
