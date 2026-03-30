@@ -3,4 +3,5 @@
  (public_name capitalization.ppx_configuration)
  (libraries base capitalization ppxlib)
  (preprocess
-  (pps ppx_base -require-template-extension)))
+  (pps ppx_base -compare-require-explicit-locality
+    -require-template-extension)))

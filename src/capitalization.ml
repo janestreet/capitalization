@@ -164,10 +164,10 @@ let case_for_position t ~position ~parity =
   What_to_capitalize.case_for_position (what_to_capitalize t) ~position ~parity
 ;;
 
-let apply_to_snake_case' s ~case_for_position ~separator =
+let%template apply_to_snake_case' s ~case_for_position ~separator =
   let output_size =
     match separator with
-    | None -> String.length s - String.count s ~f:([%equal: char] '_')
+    | None -> String.length s - String.count s ~f:(([%equal: char] [@mode local]) '_')
     | Some _ -> String.length s
   in
   let buffer = Buffer.create output_size in
