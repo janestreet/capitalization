@@ -28,9 +28,9 @@ module Single_word = struct
     ; ppx_name : string
     }
 
-  let potential_options single_word =
+  let%template potential_options single_word =
     List.filter Capitalization.all ~f:(fun capitalization ->
-      [%equal: Capitalization.Single_word.t]
+      ([%equal: Capitalization.Single_word.t] [@mode local])
         single_word
         (Capitalization.first_word_behavior capitalization))
   ;;
